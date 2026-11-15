@@ -91,6 +91,24 @@ mcol3.metric("Peak Temperature", f"{metrics.get('max_recorded_temp', 'N/A')}°C"
 mcol4.metric("Lowest Temperature", f"{metrics.get('min_recorded_temp', 'N/A')}°C", f"Limit: {metrics.get('min_configured_temp')}°C")
 mcol5.metric("ML Anomaly Rate", f"{metrics.get('anomaly_frequency_pct', 0.0)}%", f"{metrics.get('anomaly_count', 0)} observations")
 
+sensor_breakdown = risk_data.get("sensor_breakdown", {})
+if len(sensor_breakdown) > 1:
+    st.markdown("#### 🏢 Individual Sensor Risk Breakdown")
+    s_rows = []
+    for s_id, s_info in sensor_breakdown.items():
+        m = s_info.get("metrics", {})
+        s_rows.append({
+            "Sensor ID": s_id,
+            "Risk Category": s_info.get("risk_category", "LOW"),
+            "Risk Score": f"{s_info.get('risk_score', 0)}/100",
+            "Peak Temp (°C)": m.get("max_recorded_temp", "N/A"),
+            "Lowest Temp (°C)": m.get("min_recorded_temp", "N/A"),
+            "Excursion Time (min)": m.get("excursion_duration_minutes", 0.0),
+            "Excursion Episodes": m.get("num_excursion_episodes", 0),
+            "Trend (°C/hr)": m.get("trend_deg_per_hour", 0.0)
+        })
+    st.dataframe(pd.DataFrame(s_rows), use_container_width=True, hide_index=True)
+
 st.markdown("---")
 
 # ==========================================

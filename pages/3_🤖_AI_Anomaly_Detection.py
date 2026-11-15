@@ -75,7 +75,7 @@ with st.expander("⚙️ Anomaly Model Execution & AWS Cloud Actions", expanded=
         # Test AWS Prerequisites before launching
         s3_mgr = S3Manager()
         sm_svc = SageMakerRCFService()
-        prereqs = sm_svc.validate_cloud_prerequisites()
+        prereqs = sm_svc.validate_cloud_prerequisites(s3_manager=s3_mgr)
 
         if not prereqs["ready"]:
             st.error("❌ AWS Cloud prerequisites not met:")
